@@ -99,7 +99,12 @@ def sign_up():
 
 @app.route('/add-chapter')
 def add_chapter():
-    pass
+
+    chapter_title = request.args.get('chapter_title')
+    # sql = (f"insert into register(TEN_CHUONG) "
+    # "values(:chapter_title})")
+    # cursor.execute(sql, [chapter_title])
+    return "add success"
 
 @app.route('/add-lesson')
 def add_lesson():

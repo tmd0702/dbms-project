@@ -13,13 +13,27 @@ class Run {
         this.formElements = document.querySelectorAll("form");
     }
 
+    httpGet(url) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", url, false ); // false for synchronous request
+        xmlHttp.send( null );
+        return xmlHttp.responseText;
+    }
+
     activateForm(formElement) {
         const currentActiveForm = document.querySelector('.active-form');
         if (currentActiveForm) {
-            // None of form is currently activated yet.
             currentActiveForm.classList.remove('active-form');
         }
         formElement.classList.add('active-form');
+    }
+
+    generateUrl(baseUrl, inputValues) {
+        let url = baseUrl;
+        for (let key of Object.keys(inputValues)) {
+            url += key + '=' + inputValues[key] + '&';
+        }
+        return url.substring(0, url.length - 1);
     }
 
     handleAddChapterAction() {
@@ -31,6 +45,7 @@ class Run {
     }
 
     handleSubmitFormAction() {
+        const run = this;
         this.formElements.forEach(formElement => {
             formElement.addEventListener('submit', (event) => {
                 event.preventDefault();
@@ -39,15 +54,20 @@ class Run {
                 const formType = formElement.classList[0];
 
                 let submitInfo = {
-                    "value": {},
+                    "values": {},
                     "type": formType
                 };
             
                 inputElements.forEach(inputElement => {
-                    submitInfo["value"][inputElement.name] = inputElement.value;
+                    submitInfo["values"][inputElement.name] = inputElement.value;
                 })
+                const baseUrl = "http://localhost:8081/add-chapter?";
+                let url = run.generateUrl(baseUrl, submitInfo['values']);
+                console.log(url);
+                const addChapterStatus = run.httpGet(url);
 
                 console.log(submitInfo);
+                console.log(addChapterStatus);
             })
         })
     }
