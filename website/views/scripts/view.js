@@ -13,6 +13,10 @@ class Run {
         this.formElements = document.querySelectorAll("form");
     }
 
+    reRender() {
+        
+    }
+
     httpGet(url) {
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open( "GET", url, false ); // false for synchronous request

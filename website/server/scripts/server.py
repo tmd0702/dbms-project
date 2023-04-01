@@ -14,7 +14,7 @@ db_login = {
     'password': 'sa123456'
 },
 'knowledge_manager': {
-    'username': 'knowledge_manager',
+    'username': 'knowledge_admin',
     'password': 'sa123456'
 },
 'dns': 'localhost:1521/orcl',
@@ -76,8 +76,6 @@ def sign_up():
 
     sql = ("insert into register(id, last_name, first_name, password, gender, dob, phone, email) "
     "values(:username,:last_name,:first_name,:password, :gender, TO_DATE(:dob, 'YYYY-MM-DD'), :phone, :email)")
-    print(sql, [username, last_name, first_name, password, gender, dob, phone, email])
-    print(datetime.datetime.now())
     try:
         with cx_Oracle.connect(db_login['user_manager']['username'],
                             db_login['user_manager']['password'],
@@ -99,12 +97,27 @@ def sign_up():
 
 @app.route('/add-chapter')
 def add_chapter():
-
     chapter_title = request.args.get('chapter_title')
-    # sql = (f"insert into register(TEN_CHUONG) "
-    # "values(:chapter_title})")
-    # cursor.execute(sql, [chapter_title])
-    return "add success"
+    sql = ("insert into chapter(title) "
+    "values(:chapter_title)")
+    try:
+        with cx_Oracle.connect(db_login['knowledge_manager']['username'],
+                            db_login['knowledge_manager']['password'],
+                            db_login['dns'],
+                            encoding=db_login['encoding']) as connection:
+        # create a cursor
+            with connection.cursor() as cursor:
+                # execute the insert statement
+                cursor.execute(sql, [chapter_title])
+                # commit work
+                connection.commit()
+
+                return 'add chapter success'
+
+    except cx_Oracle.Error as error:
+        print('Error occurred:')
+        print(error)
+        raise error
 
 @app.route('/add-lesson')
 def add_lesson():
@@ -113,6 +126,59 @@ def add_lesson():
 @app.route('/add-knowledge')
 def add_knowledge():
     pass
+
+@app.route('/chapter-list')
+def get_chapter_list():
+    sql = 'SELECT * FROM CHAPTER'
+    try:
+        with cx_Oracle.connect(db_login['knowledge_manager']['username'],
+                            db_login['knowledge_manager']['password'],
+                            db_login['dns'],
+                            encoding=db_login['encoding']) as connection:
+        # create a cursor
+            with connection.cursor() as cursor:
+                # execute the insert statement
+                cursor.execute(sql)
+                cursor.rowfactory = lambda *args: dict(zip([d[0] for d in cursor.description], args))
+                chapter_list = cursor.fetchall()
+                print(chapter_list)
+                # commit work
+                connection.commit()
+
+                return 'add chapter success'
+
+    except cx_Oracle.Error as error:
+        print('Error occurred:')
+        print(error)
+        raise error
+
+@app.route('/lesson-list-of-chapter')
+def get_lesson_list_with_chapter_id():
+    chapter_id = request.args.get('chapter_id')
+    sql = ("SELECT * FROM LESSON WHERE CHAPTER_ID = :chapter_id")
+    try:
+        with cx_Oracle.connect(db_login['knowledge_manager']['username'],
+                            db_login['knowledge_manager']['password'],
+                            db_login['dns'],
+                            encoding=db_login['encoding']) as connection:
+        # create a cursor
+            with connection.cursor() as cursor:
+                # execute the insert statement
+                cursor.execute(sql, [chapter_id])
+                # cursor.rowfactory = lambda *args: dict(zip([d[0] for d in cursor.description], args))
+                lesson_list = cursor.fetchall()
+                print(lesson_list, 'AAAAAAAAAAAA')
+                # commit work
+                connection.commit()
+
+                return lesson_list
+
+    except cx_Oracle.Error as error:
+        print('Error occurred:')
+        print(error)
+        raise error
+
+    
 
 
 app.run(debug=False, port=8081)
