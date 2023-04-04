@@ -23,6 +23,7 @@
 }
 /* Lesson list section */
 .lesson-list-section {
+    /* position: relative; */
     height: 100%;
     width: 25%;
     background-color: yellow;
@@ -31,20 +32,77 @@
     text-align: center;
     border-bottom: 1px solid black; 
 }
+.active-lesson-list {
+    display: block !important;
+}
 .add-chapter-btn { 
     text-align: center;
     border: 1px solid black;
+}
+.add-lesson-btn { 
+    text-align: center;
+    background-color: yellow;
+    border: 1px solid black;
+}
+.delete-btn-section {
+    float: right;
+}
+.delete-chapter {
+    width: 20px;
+    height: 20px;
+    background-color: red;
+}
+.delete-lesson {
+    width: 20px;
+    height: 20px;
+    background-color: purple;
 }
 .add-chapter-btn:hover {
     background-color: white;
     cursor: pointer;
 }
+.add-lesson-btn:hover {
+    background-color: white;
+    cursor: pointer;
+}
+.chapter-title-section {
+    /* overflow: auto; */
+}
+.chapter-title {
+    /* overflow: auto; */
+    width: 100%;
+    height: auto;
+    background-color: grey;
+    color: white;
+}
 
+.lesson-title-section {
+    display: none;
+}
+.lesson_title {
+    display: block;
+}
 /* Knowledge view section */
 .knowledge-section {
     height: 100%;
     width: 50%;
     background-color: blue;
+}
+.knowledge-title-section {
+    background-color: orange;
+}
+.category-tab-pane-section {
+    display: flex;
+    /* justify-content: space-around; */
+}
+.category-tab {
+    border: 1px solid black;
+    padding: 1% 5%;
+    background-color: white;
+}
+.category-tab:hover {
+    color: orange;
+    background-color: #cccccc; 
 }
 
 
@@ -70,7 +128,11 @@
 .form-section form {
     
 }
-
+.exit-btn {
+    width: 50px;
+    height: 50px;
+    background-color: yellow;
+}
 .active-form {
     display: block !important;
 }
